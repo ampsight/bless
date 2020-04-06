@@ -18,14 +18,12 @@ def success_response(cert):
     return {
         'certificate': cert
     }
-
-
+    
 def error_response(error_type, error_message):
     return {
         'errorType': error_type,
         'errorMessage': error_message
     }
-
 
 def set_logger(config):
     logging_level = config.get(BLESS_OPTIONS_SECTION, LOGGING_LEVEL_OPTION)

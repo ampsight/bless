@@ -4,6 +4,7 @@
     :license: Apache, see LICENSE for more details.
 """
 import time
+import os
 
 import boto3
 from bless.aws_lambda.bless_lambda_common import success_response, error_response, set_logger, check_entropy, \
@@ -177,9 +178,9 @@ def lambda_handler_user(
         cert_builder.clear_extensions()
 
     # cert_builder is needed to obtain the SSH public key's fingerprint
-    key_id = 'request[{}] for[{}] from[{}] command[{}] ssh_key[{}]  ca[{}] valid_to[{}]'.format(
+    key_id = 'request[{}] for[{}] from[{}] command[{}] ssh_key[{}] ca[{}] ca_key[{}] valid_to[{}]'.format(
         context.aws_request_id, request.bastion_user, request.bastion_user_ip, request.command,
-        cert_builder.ssh_public_key.fingerprint, context.invoked_function_arn,
+        cert_builder.ssh_public_key.fingerprint, context.invoked_function_arn, os.environ.get('ca_key_name'),
         time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(valid_before)))
     cert_builder.set_critical_option_source_addresses(request.bastion_ips)
     cert_builder.set_key_id(key_id)
